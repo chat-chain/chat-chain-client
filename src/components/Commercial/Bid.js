@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-
+import { api } from '../../environment'
 export class Bid extends Component {
   constructor(props) {
     super(props)
@@ -31,10 +31,10 @@ export class Bid extends Component {
   getGas = async () => {
     try {
       const priorityFee = await axios.get(
-        'http://localhost:5000/commercial/getMaxPriorityFeePerGas'
+        `${api}/commercial/getMaxPriorityFeePerGas`
       )
       console.log(priorityFee.data)
-      const maxGasPerTX = await axios.get('http://localhost:5000/gasEstimation')
+      const maxGasPerTX = await axios.get(`${api}/gasEstimation`)
       console.log('maxGasPerTX', maxGasPerTX.data)
       return { priorityFee: priorityFee.data, maxGasPerTX: maxGasPerTX.data }
     } catch (err) {
@@ -70,7 +70,7 @@ export class Bid extends Component {
 
   render() {
     const { bid, minPriceForCom } = this.state
-    const { userBidPerCom,comCount } = this.props
+    const { userBidPerCom, comCount } = this.props
     return bid && minPriceForCom && userBidPerCom ? (
       <>
         <div>choose bid:</div>
@@ -89,14 +89,15 @@ export class Bid extends Component {
           />
         </div>
         <div>
-          <input type="text" pattern="[0-9]*"
-              name="comCount"
-              onChange={this.props.handleInputChange}
-              value={comCount} 
-              />
-              
-              </div>
-              <p style={{ color: 'green' }}>Total {userBidPerCom*comCount} Wei</p>
+          <input
+            type="text"
+            pattern="[0-9]*"
+            name="comCount"
+            onChange={this.props.handleInputChange}
+            value={comCount}
+          />
+        </div>
+        <p style={{ color: 'green' }}>Total {userBidPerCom * comCount} Wei</p>
         <button type="button" onClick={this.props.onSendCommercial}>
           Send Commercial
         </button>

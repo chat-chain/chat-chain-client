@@ -1,18 +1,19 @@
 import axios from 'axios'
+import { api } from './environment'
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
 
-
-export const paidPost= async (
+export const paidPost = async (
   text,
   prev,
   account,
   recipiantContract,
   currentProvider
 ) => {
-  recipiantContract.methods.post(text, prev).send({ from: account, gasLimit: 6000000 })
+  recipiantContract.methods
+    .post(text, prev)
+    .send({ from: account, gasLimit: 6000000 })
 }
-
 
 export const signData = async (
   text,
@@ -124,7 +125,7 @@ export const signData = async (
             txData,
           }
           try {
-            const res = await axios.post('http://localhost:5000/sig', reqMsg)
+            const res = await axios.post(`${api}/sig`, reqMsg)
             console.log('res: ', res)
           } catch (err) {
             console.log('err:', err)
