@@ -1,0 +1,14 @@
+p {
+  margin: 0;
+}
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+.App {
+  display: grid;
+  margin: auto;
+  text-align: center;
+  margin: 1em;
+}
