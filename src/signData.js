@@ -10,10 +10,9 @@ export const paidPost = async (
   recipiantContract,
   currentProvider
 ) => {
-  recipiantContract.methods
-    .post(text, prev)
-    .send({ from: account, gasLimit: 6000000 })
+  recipiantContract.methods.post(text, prev).send({ from: account, gasLimit: 6000000 })
 }
+
 
 export const signData = async (
   text,
@@ -29,6 +28,11 @@ export const signData = async (
   const contract_of_remote = recipiantContract._address
   console.log('contract_of_remote', contract_of_remote)
   const txData = recipiantContract.methods.post(text, prev).encodeABI()
+  /*bug
+  const txData  = await recipiantContract.methods
+  .land(await recipiantContract.methods
+    .post('AHA',0).encodeABI(),4,'0x5e1feaa2C0b62302e670BF621a216D751be037FC','0x5e1feaa2C0b62302e670BF621a216D751be037FC').encodeABI()
+  */ 
 
   currentProvider.sendAsync(
     {

@@ -89,15 +89,15 @@ export class Bid extends Component {
           />
         </div>
         <div>
-          <input
+        <input
             type="text"
             pattern="[0-9]*"
-            name="comCount"
-            onChange={this.props.handleInputChange}
-            value={comCount}
-          />
-        </div>
-        <p style={{ color: 'green' }}>Total {userBidPerCom * comCount} Wei</p>
+              name="comCount"
+              onChange={this.props.handleInputChange}
+              value={comCount} 
+              />
+              </div>
+              <p style={{ color: 'green' }}>Total {userBidPerCom * comCount} Wei</p>
         <button type="button" onClick={this.props.onSendCommercial}>
           Send Commercial
         </button>
