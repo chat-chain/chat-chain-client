@@ -7,17 +7,17 @@ contract Recipiant is Landable(){
   
   address _domainHashAdd;
   uint postCounter;
-  bool _freePost;
 
 
 
   constructor(string memory first_post, address domainHashAdd , address firstComContract, uint firstComIndex , address eveeContract){
     _tokenId = firstComIndex;
     _NFTContract = firstComContract;
-    _freePost = true;
     whiteListEvee(eveeContract);
     changedomainHashAdd (domainHashAdd);
     post(first_post,0);
+    _tokenId = 0;
+    _NFTContract = address(0);
   }
   
   event post_com(uint indexed id, address indexed NFTContract , uint indexed tokenId, bool freePost);
@@ -27,10 +27,10 @@ contract Recipiant is Landable(){
 
   function post(string memory input, uint prev) public {
     require (prev < postCounter || prev == 0, 'commenting on non-existing post');
-    if (_sender == address(0)) {
+    if (!_freeTx) {
       _sender = msg.sender;
     }
-    emit post_com(postCounter, _NFTContract, _tokenId, _freePost);
+    emit post_com(postCounter, _NFTContract, _tokenId, _freeTx);
     emit post_msg(postCounter,prev, input, _sender);
 
     postCounter ++;
