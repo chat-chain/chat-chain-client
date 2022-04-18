@@ -1,7 +1,6 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "homepage": "https://chat-chain.github.io/chat-chain-client/",
   "private": false,
   "dependencies": {
     "@bit/joshk.react-spinners-css.ring": "^1.2.1",
