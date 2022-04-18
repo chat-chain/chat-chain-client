@@ -8,8 +8,8 @@ var Test = artifacts.require("./Test.sol");
 
 
 module.exports = function(deployer, network, accounts) {
-  console.log('accounts[0] ',accounts[0]);
-  deployer.deploy(EveeNFT,accounts[0],'https://gateway.pinata.cloud/ipfs/QmQfSCYuGTV4nGU3cxPdheNZgmvJqpfKTR7wuQiQHStv6d').then(function(){
+  //console.log('accounts[0] ',accounts[0]);
+  deployer.deploy(EveeNFT,'https://gateway.pinata.cloud/ipfs/QmQfSCYuGTV4nGU3cxPdheNZgmvJqpfKTR7wuQiQHStv6d').then(function(){
       return deployer.deploy(Evee, EveeNFT.address).then(function(){
         return deployer.deploy(RecipiantHashDomain).then(function(){
             console.log('RecipiantHashDomain.address',RecipiantHashDomain.address);

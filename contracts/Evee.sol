@@ -1,5 +1,4 @@
 pragma solidity >=0.4.21 <0.9.0;
-import "./EveeNFT.sol";
 
 contract Evee 
 
@@ -7,8 +6,8 @@ contract Evee
   	address NFTContract;
 	event Log_data(string log);
 	event refunded(address to , uint refundAmount);
-	event commercial_created(address indexed owner , address _attachFrom, address _attachTo, uint balance, uint id );
-	event commercial_consumed(address indexed owner , address _attachFrom, address _attachTo, uint balance, uint id  );
+	event commercial_created(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance,  uint comCount ,uint id );
+	event commercial_consumed(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id );
 
 
 	/*NFT - 
@@ -88,7 +87,7 @@ contract Evee
 		Node memory node = Node (0,idCounter[_attachFrom][_attachTo],com);
 		idCounter[_attachFrom][_attachTo] ++;
 		commercialsList[_attachFrom][_attachTo][idCounter[_attachFrom][_attachTo]] = node;
-		emit commercial_created(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, idCounter[_attachFrom][_attachTo]);
+		emit commercial_created(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, idCounter[_attachFrom][_attachTo]);
 		if (head[_attachFrom][_attachTo] == 0) {
 			head[_attachFrom][_attachTo] = idCounter[_attachFrom][_attachTo];
 		}
@@ -112,7 +111,6 @@ contract Evee
 		if (commercialsList[attachFrom][attachTo][id].next != 0){
 			commercialsList[attachFrom][attachTo][commercialsList[attachFrom][attachTo][id].next].prev = commercialsList[attachFrom][attachTo][id].prev;
 		}
-		emit commercial_consumed(commercialsList[attachFrom][attachTo][id].com.owner, commercialsList[attachFrom][attachTo][id].com.attachFrom,commercialsList[attachFrom][attachTo][id].com.attachTo,commercialsList[attachFrom][attachTo][id].com.gweiAmount, id ); 
 
 
 
@@ -137,6 +135,18 @@ contract Evee
 		}
 		return arr;
 	}
+
+	/*function dumpCommercial(address attachFrom ,address attachTo, uint comCount) view public isWhitelisted(attachFrom, msg.sender) returns (uint[] memory){
+		uint id = head[attachFrom][attachTo];
+		uint [] memory arr = new uint[](comCount);
+		uint i = 0;
+		while ((id!=0) && (i < comCount-1)){
+			require (commercialsList[attachFrom][attachTo][id].com.isActive, 'Linked list is broken, inactive commercial in list of commercials');
+			
+			id = commercialsList[attachFrom][attachTo][id].next;
+		}
+		return arr;
+	}*/
 
 	function refund(uint amountRequested) private {
 		if (address(this).balance < amountRequested){
@@ -199,6 +209,7 @@ contract Evee
                 refund(com.gweiAmount / com.comCount);
                 commercialsList[proxy][remote][id].com.gweiAmount = com.gweiAmount - (com.gweiAmount / com.comCount);
             }
+			emit commercial_consumed(commercialsList[proxy][remote][id].com.owner, commercialsList[proxy][remote][id].com.attachFrom,commercialsList[proxy][remote][id].com.attachTo,commercialsList[proxy][remote][id].com.gweiAmount, commercialsList[proxy][remote][id].com.comCount, id); 
             commercialsList[proxy][remote][id].com.comCount -= 1;
 	}
 

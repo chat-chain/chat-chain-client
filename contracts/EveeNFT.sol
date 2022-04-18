@@ -6,8 +6,9 @@ import "./ownership/ownable.sol";
 
 contract EveeNFT is NFTokenMetadata, Ownable {
 
-    uint public token_counter ;
-    //need appendabvle owner
+  uint public token_counter ;
+  mapping (address => bool) minters;
+    
 
   event ChangeUri(
     address indexed _changer,
@@ -15,19 +16,21 @@ contract EveeNFT is NFTokenMetadata, Ownable {
     string  indexed _to,
     uint256 indexed _tokenId
   );
-	constructor(address ownerOfFirstCom,string memory _uri){
+	constructor(string memory _uri){
+    owner = msg.sender;
+    addRemoveMinter(msg.sender, true);
     nftName = 'Evee';
     nftSymbol = 'EVE';
     token_counter = 0;
     mintNew(msg.sender,_uri);
   }
 
-  function baseTokenURI() public view returns (string memory) {
-    return "https://gateway.pinata.cloud/ipfs/QmVyKSymq6abFsSeRJ6n7Kkjkju9XW1Mqj237ZaDtv2e2W";
+  function addRemoveMinter(address minter, bool addRemove_) public onlyOwner() {
+    minters[minter] = addRemove_;
   }
 
   function mintNew(address _to,string memory _uri) public returns (uint){
-    // it is critical to make mint internal
+    require (minters[msg.sender] , 'Only aproved minter can mint');
     token_counter ++;
     super.mint(_to, token_counter, _uri);
     emit ChangeUri(_to,"",_uri,token_counter);
