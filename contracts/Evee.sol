@@ -6,9 +6,7 @@ contract Evee
   	address NFTContract;
 	event Log_data(string log);
 	event refunded(address to , uint refundAmount);
-	event commercial_created(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance,  uint comCount ,uint id );
-	event commercial_consumed(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id );
-
+	event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id , bool is_active , bool created_consumed_);
 
 	/*NFT - 
 	// implement a set uri function and a new transfer that resets uri (or a transfer that requires new uri)
@@ -87,7 +85,7 @@ contract Evee
 		Node memory node = Node (0,idCounter[_attachFrom][_attachTo],com);
 		idCounter[_attachFrom][_attachTo] ++;
 		commercialsList[_attachFrom][_attachTo][idCounter[_attachFrom][_attachTo]] = node;
-		emit commercial_created(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, idCounter[_attachFrom][_attachTo]);
+		emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, idCounter[_attachFrom][_attachTo] , com.isActive , true);
 		if (head[_attachFrom][_attachTo] == 0) {
 			head[_attachFrom][_attachTo] = idCounter[_attachFrom][_attachTo];
 		}
@@ -160,13 +158,6 @@ contract Evee
 		emit refunded(msg.sender , amountRequested);
 	}
 
-
-	function consumeCommercial(address attFrom,address remote, uint id) internal isWhitelisted(attFrom, msg.sender) returns (Commercial memory com){
-		require (commercialsList[attFrom][remote][id].com.isActive, string(abi.encodePacked('commecial id dont exist',abi.encodePacked(attFrom))));
-        com = commercialsList[attFrom][remote][id].com;
-	}
-
-
 	function verifySingerFromSignature(
 		  uint8 v,
 	    bytes32 r,
@@ -197,20 +188,21 @@ contract Evee
 
 	
 	function sendMessege(address proxy, address remote,uint id , bytes memory txData, address sender) internal {
-			Commercial memory com = consumeCommercial(proxy, remote,id);
+			Commercial storage com = commercialsList[proxy][remote][id].com;
 			uint256 tokenId = NFTMint(com.owner , com.uri);
 			(bool success, ) = remote.call(abi.encodeWithSignature(string('land(bytes,uint256,address,address)'),txData,tokenId,NFTContract,sender));
 			require(success, string(abi.encodePacked("Failed call ", string(txData))));
             if (com.comCount == 1){
 			    refund(com.gweiAmount); 
-                //commercialsList[proxy][remote][id].com.gweiAmount = 0;
+                com.gweiAmount = 0;
                 deleteCommercial(proxy, remote, id);
             } else {
                 refund(com.gweiAmount / com.comCount);
-                commercialsList[proxy][remote][id].com.gweiAmount = com.gweiAmount - (com.gweiAmount / com.comCount);
+                com.gweiAmount = com.gweiAmount - (com.gweiAmount / com.comCount);
             }
-			emit commercial_consumed(commercialsList[proxy][remote][id].com.owner, commercialsList[proxy][remote][id].com.attachFrom,commercialsList[proxy][remote][id].com.attachTo,commercialsList[proxy][remote][id].com.gweiAmount, commercialsList[proxy][remote][id].com.comCount, id); 
-            commercialsList[proxy][remote][id].com.comCount -= 1;
+            com.comCount -= 1;
+			emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, id, com.isActive , false); 
+
 	}
 
 	function freeSendMessege (
@@ -227,6 +219,7 @@ contract Evee
 		  require(sender != address(0), "sender null address");
 		  require(block.timestamp < deadline, "Signed transaction expired");
 		  require(id != 0, 'id cant be 0');
+		  require (commercialsList[proxy][remote][id].com.isActive, string(abi.encodePacked('commecial id dont exist',abi.encodePacked(proxy))));
 		  verifySingerFromSignature(v, r, s, sender, remote, deadline, txData);
 		  
 		  
