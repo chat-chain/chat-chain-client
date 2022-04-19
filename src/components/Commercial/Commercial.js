@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Bid } from './Bid'
+const masterProxy = '0xf38232721553a3dfa5F7c0E473c6A439CD776038';
 export class Commercial extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       uri: '',
-      address: '',
-      slaveAddress: '',
       flag: false,
       userBidPerCom: '',
       comCount: '',
@@ -25,11 +24,11 @@ export class Commercial extends Component {
 
   onSendCommercial = async () => {
     const { accounts, eveeContract, recipiantContract } = this.props
-    const { uri, address, userBidPerCom, comCount } = this.state
+    const { uri, userBidPerCom, comCount } = this.state
     const contract_of_remote = await recipiantContract._address
     console.log('BID', parseInt(userBidPerCom))
     await eveeContract.methods
-      .acceptComercial(address, contract_of_remote, uri, comCount)
+      .acceptComercial(masterProxy, contract_of_remote, uri, comCount)
       .send({ from: accounts[0], gasLimit: 6000000, value: parseInt(userBidPerCom) * parseInt(comCount)})
 
     /* testing of no TXData code
@@ -38,13 +37,57 @@ export class Commercial extends Component {
       .send({ from: accounts[0], gasLimit: 6000000, value: 90000000000000000 })
     */
   }
-  addToWhiteList = async () => {
-    const { accounts, eveeContract } = this.props
-    const { slaveAddress } = this.state
-    await eveeContract.methods
-      .addToWhiteList(slaveAddress)
-      .send({ from: accounts[0], gasLimit: 6000000 })
+
+  getMyPendingCommercials = async () => {
+    const { accounts , recipiantContract } = this.props
+    var filter = { owner: accounts[0], _attachFrom: masterProxy , _attachTo: await recipiantContract._address}
+    const allEvents = await this.getCommercials(filter)
+    console.log('Commercials Events',allEvents)
+    var currentActiveComs = {}
+    for (var event of allEvents){
+      if (event['created_consumed_'] == true){
+        event['maxComCount'] = event['currentComCount'];
+        currentActiveComs[event['id']] = event;
+      }
+      else if (event['currentComCount'] > 0 ){
+        currentActiveComs[event['id']]['currentComCount'] = event['currentComCount']
+      }
+      else if( event['is_active'] == false ){
+        delete currentActiveComs[event['id']];
+      }
+    }  
+    console.log('Pending Commercials',currentActiveComs)
   }
+
+
+  getCommercials = async (filter) => {
+    const { accounts, eveeContract, recipiantContract } = this.props
+    const contract_of_remote = await eveeContract._address
+    //const contract_of_remote = await recipiantContract._address
+    //	event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id , bool is_active , bool created_consumed_);
+    var unused_commercials = 
+      await eveeContract.getPastEvents('commercial', {
+        filter: filter, // use prev : x to see all x's replies
+        fromBlock: 0,
+        toBlock: 'latest',
+      })
+      var myPendingComs = []
+      for (var com of unused_commercials){
+        var dict = {}
+        dict['_attachFrom'] = com.returnValues._attachFrom
+        dict['_attachTo'] = com.returnValues._attachTo
+        dict['balance'] = com.returnValues.balance
+        dict['currentComCount'] = com.returnValues.comCount
+        dict['created_consumed_'] = com.returnValues.created_consumed_
+        dict['id'] = com.returnValues.id
+        dict['is_active'] = com.returnValues.is_active
+        dict['owner'] = com.returnValues.owner
+        myPendingComs.push(dict)
+      }
+     return (myPendingComs)
+
+  }
+
   setFlag = () => {
     this.setState({
       flag: true,
@@ -57,34 +100,18 @@ export class Commercial extends Component {
     this.setState({ comCount })
   }
   render() {
-    const { uri, address, slaveAddress, flag, userBidPerCom, comCount } = this.state
+    const { uri, address, flag, userBidPerCom, comCount } = this.state
     const { web3 } = this.props
+    //this.getMyPendingCommercials()
     return (
       <>
         <div>
           current commercial address :
-          0xf38232721553a3dfa5F7c0E473c6A439CD776038
+          {masterProxy}
         </div>
         <div>
-          <label>Slave address: </label>
-          <input
-            type="text"
-            name="slaveAddress"
-            value={slaveAddress}
-            placeholder="slaveAddress"
-            onChange={this.handleInputChange}
-          />
-          <button onClick={this.addToWhiteList}>Add proxy to whitelist</button>
-        </div>
-        <div>
-          <label>address: </label>
-          <input
-            type="text"
-            name="address"
-            value={address}
-            placeholder="address"
-            onChange={this.handleInputChange}
-          />
+        <button onClick={this.getMyPendingCommercials}>My Pending Commercials</button>
+
         </div>
         <div>
           <label>URI: </label>
