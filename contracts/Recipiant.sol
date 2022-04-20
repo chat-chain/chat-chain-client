@@ -11,17 +11,13 @@ contract Recipiant is Landable(){
 
 
   constructor(string memory first_post, address domainHashAdd , address firstComContract, uint firstComIndex , address eveeContract){
-    whiteListEvee(eveeContract);
-    changedomainHashAdd (domainHashAdd);
-    _freeTx = true;
-    _sender = msg.sender;
     _tokenId = firstComIndex;
     _NFTContract = firstComContract;
+    whiteListEvee(eveeContract);
+    changedomainHashAdd (domainHashAdd);
     post(first_post,0);
     _tokenId = 0;
     _NFTContract = address(0);
-    _freeTx = false;
-    _sender = address(0);
   }
   
   event post_com(uint indexed id, address indexed NFTContract , uint indexed tokenId, bool freePost);
