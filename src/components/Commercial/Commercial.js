@@ -64,7 +64,8 @@ export class Commercial extends Component {
     const { accounts, eveeContract, recipiantContract } = this.props
     const contract_of_remote = await eveeContract._address
     //const contract_of_remote = await recipiantContract._address
-    //	event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id , bool is_active , bool created_consumed_);
+    //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
+
     var unused_commercials = 
       await eveeContract.getPastEvents('commercial', {
         filter: filter, // use prev : x to see all x's replies
@@ -82,6 +83,9 @@ export class Commercial extends Component {
         dict['id'] = com.returnValues.id
         dict['is_active'] = com.returnValues.is_active
         dict['owner'] = com.returnValues.owner
+        dict['uri'] = com.returnValues.uri
+        dict['nft'] = com.returnValues.nft
+        dict['nftAddress'] = com.returnValues.nftAddress
         myPendingComs.push(dict)
       }
      return (myPendingComs)

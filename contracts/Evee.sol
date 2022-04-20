@@ -6,7 +6,7 @@ contract Evee
   	address NFTContract;
 	event Log_data(string log);
 	event refunded(address to , uint refundAmount);
-	event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, uint comCount ,uint id , bool is_active , bool created_consumed_);
+	event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address nftAddress );
 
 	/*NFT - 
 	// implement a set uri function and a new transfer that resets uri (or a transfer that requires new uri)
@@ -85,7 +85,7 @@ contract Evee
 		Node memory node = Node (0,idCounter[_attachFrom][_attachTo],com);
 		idCounter[_attachFrom][_attachTo] ++;
 		commercialsList[_attachFrom][_attachTo][idCounter[_attachFrom][_attachTo]] = node;
-		emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, idCounter[_attachFrom][_attachTo] , com.isActive , true);
+		emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.uri, com.comCount, idCounter[_attachFrom][_attachTo] , com.isActive , true , 0, address(0));
 		if (head[_attachFrom][_attachTo] == 0) {
 			head[_attachFrom][_attachTo] = idCounter[_attachFrom][_attachTo];
 		}
@@ -201,7 +201,7 @@ contract Evee
                 com.gweiAmount = com.gweiAmount - (com.gweiAmount / com.comCount);
             }
             com.comCount -= 1;
-			emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.comCount, id, com.isActive , false); 
+			emit commercial(com.owner, com.attachFrom, com.attachTo, com.gweiAmount, com.uri, com.comCount, id, com.isActive , false, tokenId, NFTContract); 
 
 	}
 
