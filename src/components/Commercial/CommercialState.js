@@ -3,6 +3,8 @@ import { Commercial } from './Commercial'
 import Web3Context from '../../web3Context'
 import Evee from '../../contracts/Evee.json'
 import Recipiant from '../../contracts/Recipiant.json'
+import eveeNFT from '../../contracts/EveeNFT.json'
+
 
 export class CommercialState extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ export class CommercialState extends Component {
       accounts: null,
       recipiantContract: null,
       eveeContract: null,
+      eveeNFTContract: null,
     }
   }
   static contextType = Web3Context
@@ -28,16 +31,21 @@ export class CommercialState extends Component {
       Evee.abi,
       Evee.networks[networkId].address
     )
+    const eveeNFTContract = new web3.eth.Contract(
+      eveeNFT.abi,
+      eveeNFT.networks[networkId].address
+    )
     this.setState({
       accounts,
       recipiantContract,
       eveeContract,
       web3,
+      eveeNFTContract,
     })
   }
 
   render() {
-    const { web3, accounts, recipiantContract, eveeContract } = this.state
+    const { web3, accounts, recipiantContract, eveeContract , eveeNFTContract} = this.state
     return (
       <>
         <Commercial
@@ -45,6 +53,7 @@ export class CommercialState extends Component {
           accounts={accounts}
           recipiantContract={recipiantContract}
           eveeContract={eveeContract}
+          eveeNFTContract={eveeNFTContract}
         />
       </>
     )

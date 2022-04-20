@@ -45,7 +45,7 @@ contract Landable {
     _tokenId = tokenId;
     _sender = sender;
     _NFTContract = NFTContract;
-    (bool didSucceed, bytes memory returnData) = address(this).delegatecall(senderTxData);
+    (bool didSucceed, ) = address(this).delegatecall(senderTxData);
     require(didSucceed, string(abi.encodePacked(abi.encodePacked("Failed to execute Free TX ",address(this), string(senderTxData)))));
     _tokenId = 0;
     _NFTContract = address(0);
