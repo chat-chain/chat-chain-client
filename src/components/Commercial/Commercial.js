@@ -61,8 +61,7 @@ export class Commercial extends Component {
 
 
   getCommercials = async (filter) => {
-    const { accounts, eveeContract, recipiantContract } = this.props
-    const contract_of_remote = await eveeContract._address
+    const {  eveeContract } = this.props
     //const contract_of_remote = await recipiantContract._address
     //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
 
@@ -92,6 +91,52 @@ export class Commercial extends Component {
 
   }
 
+  getMyActiveCommercials = async () => {
+    const { accounts , recipiantContract } = this.props
+    let filter = { _to: accounts[0],}
+    let transfersToMe = await this.getTransfers(filter)
+    console.log('Commercials Transfered to me ',transfersToMe)
+    let ActiveComs = []
+    for (let trx of transfersToMe){
+      let filter2 = { _tokenId: trx['tokenId'],}
+      let history = await this.getTransfers(filter2)
+      console.log(history)
+      if (history.pop()['to'] == accounts[0]){
+        ActiveComs.push(trx)
+      }
+    }
+    console.log('My Active Commercials ',ActiveComs)
+  }
+
+  getTransfers = async (_filter) => {
+    const { eveeNFTContract } = this.props
+    //const contract_of_remote = await recipiantContract._address
+    //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
+    console.log(_filter)
+    //await new Promise(r => setTimeout(r, 10000));
+    let events = 
+      await eveeNFTContract.getPastEvents('Transfer', {
+        filter: { _to: "0x49df9e9b37fb03d3a98dadb84ee261c3d1fe7054" }, // use prev : x to see all x's replies
+        fromBlock: 0,
+        toBlock: 'latest',
+      })
+      let transfers = []
+      console.log('bbbb',events)
+      for (let tr of events){
+        let dict = {
+          from:tr.returnValues._from,
+          to:tr.returnValues._to,
+          tokenId:tr.returnValues._tokenId
+        }
+        console.log('cccc',dict)
+        transfers.push(dict)
+        console.log('eeee',transfers)
+      }
+      return transfers
+
+  }
+
+
   setFlag = () => {
     this.setState({
       flag: true,
@@ -115,7 +160,7 @@ export class Commercial extends Component {
         </div>
         <div>
         <button onClick={this.getMyPendingCommercials}>My Pending Commercials</button>
-
+        <button onClick={this.getMyActiveCommercials}>My Active Commercials</button>
         </div>
         <div>
           <label>URI: </label>
