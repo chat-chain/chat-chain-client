@@ -1,12 +1,14 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect, useCallback,useContext } from 'react'
 import { signData } from '../../signData'
 import styles from './Post.module.css'
+import Web3Context from '../../web3Context'
 const regex = new RegExp(
   /\b(\S+(?:png|jpe?g|gif|apng|avif|jfif|pjpeg|pjp|svg|webp|bmp|ico|cur|tif|tiff)\S*)\b/gim
 )
 // import { v4 as uuidv4 } from 'uuid'
-const PostUI = (props) => {
-  const { currentProvider, recipiantContract, accounts, post } = props
+export const PostUI = (props) => {
+  const { post } = props
+  const {currentProvider, recipiantContract, accounts} = useContext(Web3Context)
   const isInitialMount = useRef(true)
   const [finalImage, setFinalImage] = useState([])
   const [finalImagePreview, setFinalImagePreview] = useState([])
@@ -197,4 +199,3 @@ const PostUI = (props) => {
     </main>
   )
 }
-export default PostUI

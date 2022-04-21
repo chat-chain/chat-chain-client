@@ -9,6 +9,9 @@ export const Navbar = () => {
       <Link to="/com">
         <button>Commercial</button>
       </Link>
+      <Link to="/posts">
+        <button>posts</button>
+      </Link>
     </nav>
   )
 }

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback,useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import PostUI from './PostUI'
+import { PostUI } from './PostUI'
 import getPosts from '../../getPosts'
+import Web3Context from '../../web3Context'
 
 export default function Post(props) {
   const get_main_post = useCallback(
@@ -121,9 +122,9 @@ export default function Post(props) {
     },
     [get_main_post, getfatrhers, getsons]
   )
-
-  const { eveeNFTContract, recipiantContract, currentProvider, accounts } =
-    props
+const {eveeNFTContract, recipiantContract, currentProvider, accounts}=useContext(Web3Context)
+  // const { eveeNFTContract, recipiantContract, currentProvider, accounts } =
+  //   props
   const [post, setPost] = useState(null)
   const { postId } = useParams()
   useEffect(() => {
@@ -144,14 +145,7 @@ export default function Post(props) {
         border: '3px solid yellow',
       }}
     >
-      {post && (
-        <PostUI
-          post={post}
-          currentProvider={currentProvider}
-          recipiantContract={recipiantContract}
-          accounts={accounts}
-        />
-      )}
+      {post && <PostUI post={post} />}
     </div>
   )
 }
