@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Bid } from './Bid'
+import getPosts from '../../getPosts'
+
 const masterProxy = '0xf38232721553a3dfa5F7c0E473c6A439CD776038';
 export class Commercial extends Component {
   constructor(props) {
@@ -91,51 +93,74 @@ export class Commercial extends Component {
 
   }
 
-  getMyActiveCommercials = async () => {
-    const { accounts , recipiantContract } = this.props
-    let filter = { _to: accounts[0],}
-    let transfersToMe = await this.getTransfers(filter)
-    console.log('Commercials Transfered to me ',transfersToMe)
-    let ActiveComs = []
-    for (let trx of transfersToMe){
-      let filter2 = { _tokenId: trx['tokenId'],}
-      let history = await this.getTransfers(filter2)
-      console.log(history)
-      if (history.pop()['to'] == accounts[0]){
-        ActiveComs.push(trx)
-      }
-    }
-    console.log('My Active Commercials ',ActiveComs)
-  }
-
   getTransfers = async (_filter) => {
     const { eveeNFTContract } = this.props
-    //const contract_of_remote = await recipiantContract._address
-    //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
-    console.log(_filter)
-    //await new Promise(r => setTimeout(r, 10000));
     let events = 
       await eveeNFTContract.getPastEvents('Transfer', {
-        filter: { _to: "0x49df9e9b37fb03d3a98dadb84ee261c3d1fe7054" }, // use prev : x to see all x's replies
+        filter: _filter, // use prev : x to see all x's replies
         fromBlock: 0,
         toBlock: 'latest',
       })
       let transfers = []
-      console.log('bbbb',events)
       for (let tr of events){
         let dict = {
           from:tr.returnValues._from,
           to:tr.returnValues._to,
           tokenId:tr.returnValues._tokenId
         }
-        console.log('cccc',dict)
         transfers.push(dict)
-        console.log('eeee',transfers)
       }
       return transfers
 
   }
 
+  getComs = async (_filter) => {
+    const { recipiantContract } = this.props
+    const events = await recipiantContract.getPastEvents(
+      'post_com',
+      {
+        filter: _filter, // use prev : x to see all x's replies
+        fromBlock: 0,
+        toBlock: 'latest',
+      })
+      let coms = []
+      for (let tr of events){
+        let dict = {
+          tokenId:tr.returnValues.tokenId,
+          id:tr.returnValues.id,
+          NFTContract:tr.returnValues.NFTContract
+        }
+        coms.push(dict)
+      }
+      return coms
+  }
+
+
+  getMyActiveCommercials = async () => {
+    const { accounts , recipiantContract, eveeNFTContract } = this.props
+    let filter = { _to: accounts[0],}
+    console.log(accounts[0])
+    let transfersToMe = await this.getTransfers(filter)
+    console.log('Commercials Transfered to me ',transfersToMe)
+    let ActiveNFTs = []
+    for (let trx of transfersToMe){
+      let filter2 = { _tokenId: trx['tokenId'],}
+      let history = await this.getTransfers(filter2)
+      if (history[history.length - 1]['to'].toUpperCase() == accounts[0].toUpperCase()){
+        ActiveNFTs.push(trx)
+      }
+    }
+    console.log('My Active Commercials ',ActiveNFTs)
+    let postsWithMyComs = []
+    for (let com of ActiveNFTs){
+      let postId = await this.getComs( {tokenId: com['tokenId'],NFTContract:await eveeNFTContract._address})
+      let post = await getPosts(recipiantContract, eveeNFTContract,{id: postId[postId.length - 1]['id']},)
+      postsWithMyComs.push(post[post.length - 1])
+    }
+    console.log('Account active commercials are: ',postsWithMyComs)
+  }
+
+  
 
   setFlag = () => {
     this.setState({

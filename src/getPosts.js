@@ -10,9 +10,6 @@ export default async function getPosts(
       filter: filter_for_posts, // use prev : x to see all x's replies
       fromBlock: 0,
       toBlock: 'latest',
-    },
-    (error, events) => {
-      console.log('commercials: ', events)
     }
   )
 
@@ -23,9 +20,6 @@ export default async function getPosts(
       filter: filter_for_posts, // use prev : x to see all x's replies
       fromBlock: 0,
       toBlock: 'latest',
-    },
-    (error, events) => {
-      console.log('posts: ', events)
     }
   )
 
@@ -62,7 +56,7 @@ export default async function getPosts(
     const comIndex = posts_com.find(
       ({ returnValues }) => returnValues.id === posts_msg[i].returnValues.id
     )
-    console.log('post ', posts_msg[i].returnValues.id, ' com ', comIndex)
+    //console.log('post ', posts_msg[i].returnValues.id, ' com ', comIndex)
 
     posts[i] = {
       id: posts_msg[i].returnValues.id,
@@ -75,6 +69,6 @@ export default async function getPosts(
       freePost: comIndex.returnValues.freePost,
     }
   }
-  console.log('posts ', posts)
+  //console.log('posts ', posts)
   return posts
 }
