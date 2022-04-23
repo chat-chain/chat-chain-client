@@ -91,7 +91,7 @@ export default function Post(props) {
     []
   )
 
-  const getposts = useCallback(
+  const getPostsAndRelations = useCallback(
     async (postId, eveeNFTContract, recipiantContract) => {
       // get main commercial
       const posts_msg = await get_main_post(
@@ -128,9 +128,9 @@ const {eveeNFTContract, recipiantContract, currentProvider, accounts}=useContext
   const [post, setPost] = useState(null)
   const { postId } = useParams()
   useEffect(() => {
-    getposts(postId, eveeNFTContract, recipiantContract).catch(console.error)
+    getPostsAndRelations(postId, eveeNFTContract, recipiantContract).catch(console.error)
   }, [
-    getposts,
+    getPostsAndRelations,
     postId,
     eveeNFTContract,
     recipiantContract,

@@ -30,7 +30,8 @@ contract Evee
 	    uint256 prev;
 	    Commercial com;
 	}
-	mapping (address => mapping (address => mapping (uint256 => Node)))  commercialsList;
+	mapping (address => mapping (address => mapping (uint256 => Node))) commercialsList;
+	mapping (address => mapping (address => mapping (address => uint256))) senderNonce;
 	mapping (address => mapping (address => uint256)) head;
 	// check for over flow and empty from the buttom + refound if there's enough monet
 	mapping (address => mapping (address => uint256)) idCounter;
@@ -52,6 +53,10 @@ contract Evee
 
 	function inWhiteList(address master) public view returns (bool){
 		return proxyWhiteList[master][msg.sender] == true;
+	}
+
+	function getNonce(address from, address to) public view returns (uint256){
+		return senderNonce[from][to][msg.sender];
 	}
 
 
@@ -165,6 +170,7 @@ contract Evee
 		address sender,
 	    address remote,
 	    uint256 deadline,
+		uint256 nonce,
 	    bytes memory txData
 	    ) 
 		internal 
@@ -172,10 +178,11 @@ contract Evee
 			//bytes memory hashStruct;
 			bytes32 hashStruct = keccak256(
 		        abi.encode(
-		            keccak256("land(bytes txData,address sender,uint deadline)"),
+		            keccak256("land(bytes txData,address sender,uint deadline,uint nonce)"),
 		          	keccak256(txData),
 		          	sender,
-		          	deadline
+		          	deadline,
+					nonce
 		        )
 		    );
 			(bool success, bytes memory domainHash) = remote.call(abi.encodeWithSignature(string('encodeEip712DomainHash()')));
@@ -213,6 +220,7 @@ contract Evee
 	    address proxy,
 	    address remote,
 	    uint256 deadline,
+		uint256 nonce,
 	    bytes memory txData,
 	    uint id
 		) public isWhitelisted(proxy, msg.sender) {
@@ -220,11 +228,13 @@ contract Evee
 		  require(block.timestamp < deadline, "Signed transaction expired");
 		  require(id != 0, 'id cant be 0');
 		  require (commercialsList[proxy][remote][id].com.isActive, string(abi.encodePacked('commecial id dont exist',abi.encodePacked(proxy))));
-		  verifySingerFromSignature(v, r, s, sender, remote, deadline, txData);
+		  require (nonce == senderNonce[proxy][remote][sender], 'nonce incorrect');
+		  verifySingerFromSignature(v, r, s, sender, remote, deadline, nonce, txData);
 		  
 		  
 		  // need to return token ID tokenId
 		  sendMessege(proxy,remote, id,txData,sender);
+		  senderNonce[proxy][remote][sender] ++;
 		  
 		  
 		}

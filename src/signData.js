@@ -2,7 +2,7 @@ import axios from 'axios'
 import { api } from './environment'
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
-
+const masterProxy = '0xf38232721553a3dfa5F7c0E473c6A439CD776038';
 export const paidPost = async (
   text,
   prev,
@@ -19,6 +19,7 @@ export const signData = async (
   prev,
   account,
   recipiantContract,
+  eveeContract,
   currentProvider
 ) => {
   const signer = account
@@ -28,6 +29,8 @@ export const signData = async (
   const contract_of_remote = recipiantContract._address
   console.log('contract_of_remote', contract_of_remote)
   const txData = recipiantContract.methods.post(text, prev).encodeABI()
+  const nonce = await eveeContract.methods.getNonce(masterProxy, await recipiantContract._address).call({from:account});
+  console.log('none is :', nonce)
   /*bug
   const txData  = await recipiantContract.methods
   .land(await recipiantContract.methods
@@ -56,6 +59,7 @@ export const signData = async (
             { name: 'txData', type: 'bytes' },
             { name: 'sender', type: 'address' },
             { name: 'deadline', type: 'uint' },
+            { name: 'nonce', type: 'uint' },
           ],
         },
         //make sure to replace verifyingContract with address of deployed contract
@@ -70,6 +74,7 @@ export const signData = async (
           txData: txData,
           sender: signer,
           deadline: deadline,
+          nonce : nonce,
         },
       })
 
@@ -127,6 +132,7 @@ export const signData = async (
             contract_of_remote,
             deadline,
             txData,
+            nonce,
           }
           try {
             const res = await axios.post(`${api}/sig`, reqMsg)

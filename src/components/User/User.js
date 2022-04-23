@@ -21,8 +21,8 @@ export class User extends Component {
   }
   handleUserSignFree = () => {
     const { text, prev } = this.state
-    const { account, recipiantContract, currentProvider } = this.props
-    signData(text, prev, account, recipiantContract, currentProvider)
+    const { account, recipiantContract,eveeContract, currentProvider } = this.props
+    signData(text, prev, account, recipiantContract,eveeContract, currentProvider)
   }
    handleUserSignPaid = () => {
     const { text, prev } = this.state

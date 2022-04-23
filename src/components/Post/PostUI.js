@@ -8,7 +8,7 @@ const regex = new RegExp(
 // import { v4 as uuidv4 } from 'uuid'
 export const PostUI = (props) => {
   const { post } = props
-  const {currentProvider, recipiantContract, accounts} = useContext(Web3Context)
+  const {currentProvider, recipiantContract,eveeContract, accounts} = useContext(Web3Context)
   const isInitialMount = useRef(true)
   const [finalImage, setFinalImage] = useState([])
   const [finalImagePreview, setFinalImagePreview] = useState([])
@@ -49,6 +49,7 @@ export const PostUI = (props) => {
       id,
       accounts[0],
       recipiantContract,
+      eveeContract,
       currentProvider
     )
   }
