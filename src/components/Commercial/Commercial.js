@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Bid } from './Bid'
 import getPosts from '../../getPosts'
+import getEvents from '../../getEvents'
+
 
 const masterProxy = '0xf38232721553a3dfa5F7c0E473c6A439CD776038';
 export class Commercial extends Component {
@@ -66,13 +68,11 @@ export class Commercial extends Component {
     const {  eveeContract } = this.props
     //const contract_of_remote = await recipiantContract._address
     //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
-
-    var unused_commercials = 
-      await eveeContract.getPastEvents('commercial', {
-        filter: filter, // use prev : x to see all x's replies
-        fromBlock: 0,
-        toBlock: 'latest',
-      })
+    let unused_commercials = await getEvents('commercial',eveeContract, {
+      filter: filter, // use prev : x to see all x's replies
+      fromBlock: 0,
+      toBlock: 'latest',
+    })
       var myPendingComs = []
       for (var com of unused_commercials){
         var dict = {}
@@ -95,12 +95,12 @@ export class Commercial extends Component {
 
   getTransfers = async (_filter) => {
     const { eveeNFTContract } = this.props
-    let events = 
-      await eveeNFTContract.getPastEvents('Transfer', {
-        filter: _filter, // use prev : x to see all x's replies
-        fromBlock: 0,
-        toBlock: 'latest',
-      })
+    let events = await getEvents('Transfer',eveeNFTContract,  {
+      filter: _filter, // use prev : x to see all x's replies
+      fromBlock: 0,
+      toBlock: 'latest',
+    })
+    
       let transfers = []
       for (let tr of events){
         let dict = {
@@ -116,13 +116,11 @@ export class Commercial extends Component {
 
   getComs = async (_filter) => {
     const { recipiantContract } = this.props
-    const events = await recipiantContract.getPastEvents(
-      'post_com',
-      {
-        filter: _filter, // use prev : x to see all x's replies
-        fromBlock: 0,
-        toBlock: 'latest',
-      })
+    let events = await getEvents('post_com',recipiantContract,  {
+      filter: _filter, // use prev : x to see all x's replies
+      fromBlock: 0,
+      toBlock: 'latest',
+    })
       let coms = []
       for (let tr of events){
         let dict = {
@@ -145,7 +143,9 @@ export class Commercial extends Component {
     let ActiveNFTs = []
     for (let trx of transfersToMe){
       let filter2 = { _tokenId: trx['tokenId'],}
-      let history = await this.getTransfers(filter2)
+      console.log(filter2)
+      let history
+      history = await this.getTransfers(filter2)
       if (history[history.length - 1]['to'].toUpperCase() == accounts[0].toUpperCase()){
         ActiveNFTs.push(trx)
       }
@@ -153,8 +153,15 @@ export class Commercial extends Component {
     console.log('My Active Commercials ',ActiveNFTs)
     let postsWithMyComs = []
     for (let com of ActiveNFTs){
-      let postId = await this.getComs( {tokenId: com['tokenId'],NFTContract:await eveeNFTContract._address})
-      let post = await getPosts(recipiantContract, eveeNFTContract,{id: postId[postId.length - 1]['id']},)
+      let postId
+      console.log(com['tokenId'])
+      postId = await this.getComs( {tokenId: com['tokenId'],NFTContract:await eveeNFTContract._address})
+      let not_done = true
+      let post
+      console.log(postId[postId.length - 1]['id'])
+      post = await getPosts(recipiantContract, eveeNFTContract,{id: postId[postId.length - 1]['id']},)
+      console.log('Account active commercial for post : ',com['tokenId'],'    ', post)
+
       postsWithMyComs.push(post[post.length - 1])
     }
     console.log('Account active commercials are: ',postsWithMyComs)

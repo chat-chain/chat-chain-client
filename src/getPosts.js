@@ -1,27 +1,24 @@
+import getEvents from './getEvents'
 export default async function getPosts(
   recipiantContract,
   eveeNFTContract,
   filter_for_posts
 ) {
   // get com post part
-  const posts_com = await recipiantContract.getPastEvents(
-    'post_com',
-    {
-      filter: filter_for_posts, // use prev : x to see all x's replies
-      fromBlock: 0,
-      toBlock: 'latest',
-    }
-  )
+  let not_done = true
+  let posts_com = await getEvents('post_com',recipiantContract, {
+    filter: filter_for_posts, // use prev : x to see all x's replies
+    fromBlock: 0,
+    toBlock: 'latest',
+  })
+    
 
   // get msg post part
-  const posts_msg = await recipiantContract.getPastEvents(
-    'post_msg',
-    {
-      filter: filter_for_posts, // use prev : x to see all x's replies
-      fromBlock: 0,
-      toBlock: 'latest',
-    }
-  )
+  let posts_msg = await getEvents('post_msg',recipiantContract, {
+    filter: filter_for_posts, // use prev : x to see all x's replies
+    fromBlock: 0,
+    toBlock: 'latest',
+  })
 
   //get sommercial's uri of each post (its located in EveeNFT)
   for (const p of posts_com) {
