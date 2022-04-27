@@ -5,6 +5,8 @@ import getEvents from '../../getEvents'
 import Web3Context from '../../web3Context'
 import { ActiveCommercial } from './ActiveCommercial'
 import { PendingCommercial } from './PendingCommercial'
+import Ring from '@bit/joshk.react-spinners-css.ring'
+
 const masterProxy = '0xf38232721553a3dfa5F7c0E473c6A439CD776038'
 export class Commercial extends Component {
   constructor(props) {
@@ -260,8 +262,31 @@ export class Commercial extends Component {
     //this.getMyPendingCommercials()
     return (
       <>
+        <div>
+          <label>URI: </label>
+          <input
+            type="text"
+            name="uri"
+            value={uri}
+            placeholder="uri"
+            onChange={this.handleInputChange}
+          />
+        </div>
+        <button onClick={this.setFlag}>next...</button>
+
+        {flag && (
+          <Bid
+            web3={web3}
+            userBidPerCom={userBidPerCom}
+            comCount={comCount}
+            handleInputChange={this.handleInputChange}
+            setUserBid={this.setUserBid}
+            setcomCount={this.setcomCount}
+            onSendCommercial={this.onSendCommercial}
+          />
+        )}
         <div>current commercial address :{masterProxy}</div>
-        {activeCom && pendingCom && (
+        {activeCom && pendingCom ? (
           <div
             style={{
               display: 'flex',
@@ -301,29 +326,11 @@ export class Commercial extends Component {
             {/* <button onClick={this.getMyPendingCommercials}>My Pending Commercials</button>
         <button onClick={this.getMyActiveCommercials}>My Active Commercials</button> */}
           </div>
-        )}
-        <div>
-          <label>URI: </label>
-          <input
-            type="text"
-            name="uri"
-            value={uri}
-            placeholder="uri"
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <button onClick={this.setFlag}>next...</button>
-
-        {flag && (
-          <Bid
-            web3={web3}
-            userBidPerCom={userBidPerCom}
-            comCount={comCount}
-            handleInputChange={this.handleInputChange}
-            setUserBid={this.setUserBid}
-            setcomCount={this.setcomCount}
-            onSendCommercial={this.onSendCommercial}
-          />
+        ) : (
+          <div style={{ display: 'grid', placeItems: 'center' }}>
+            <Ring color="#be97e8" style={{ justifyItems: 'center' }} />
+            loading pending & active commercials
+          </div>
         )}
       </>
     )
