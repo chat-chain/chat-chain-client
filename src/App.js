@@ -68,6 +68,7 @@ class App extends Component {
       eveeNFTContract,
       recipiantContract,
       accounts,
+      eveeContract,
     } = this.state
     if (!web3)
       return <div>Loading Web3, accounts, and recipiantContract...</div>
@@ -83,6 +84,7 @@ class App extends Component {
               recipiantContract,
               eveeNFTContract,
               accounts,
+              eveeContract,
             }}
           >
             <Routing></Routing>
