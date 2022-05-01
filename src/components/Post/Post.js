@@ -13,7 +13,7 @@ export default function Post(props) {
       //       id: postId,
       //     }, // use prev : x to see all x's replies
       //     fromBlock: 0,
-      //     toBlock: 'latest',
+      //     toBlock: 3490,
       //   })
       // ).shift()
       // get msg post part

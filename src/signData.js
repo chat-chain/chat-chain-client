@@ -45,7 +45,7 @@ export const signData = async (
     },
     (err, result) => {
       const netId = result.result
-      const chainID = 5
+      const chainID = 80001
       console.log('netId', netId)
       const msgParams = JSON.stringify({
         types: {

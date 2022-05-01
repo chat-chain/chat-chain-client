@@ -1,7 +1,9 @@
+
+
 export default async function getEvents(
   eventName,
   fromContract,
-  filter_for_posts
+  filter_for_posts,
 ) {
   // get com post part
   let ev
@@ -18,13 +20,17 @@ export default async function getEvents(
         if (e.code == -32603){
           await new Promise((resolve) => setTimeout(resolve, 50));
           not_done = true
+          
         }
         else {
-          throw e
+          throw e     
           }
       }
     }
     return ev
-    
   }
+    
+  
+
+  
  

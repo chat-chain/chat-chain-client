@@ -91,7 +91,7 @@ export class Commercial extends Component {
     let unused_commercials = await getEvents('commercial', eveeContract, {
       filter: filter, // use prev : x to see all x's replies
       fromBlock: 0,
-      toBlock: 'latest',
+    toBlock: 'latest',
     })
     var myPendingComs = []
     for (var com of unused_commercials) {
@@ -115,12 +115,13 @@ export class Commercial extends Component {
   getTransfers = async (_filter) => {
     // const { eveeNFTContract } = this.props
     const { eveeNFTContract } = this.context
+    console.log(_filter)
     let events = await getEvents('Transfer', eveeNFTContract, {
       filter: _filter, // use prev : x to see all x's replies
       fromBlock: 0,
       toBlock: 'latest',
     })
-
+    console.log('ahah',events)
     let transfers = []
     for (let tr of events) {
       let dict = {
