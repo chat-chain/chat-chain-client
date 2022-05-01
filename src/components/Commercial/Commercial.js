@@ -88,7 +88,7 @@ export class Commercial extends Component {
 
     //const contract_of_remote = await recipiantContract._address
     //		event commercial(address indexed owner , address indexed _attachFrom, address indexed _attachTo, uint balance, string uri, uint comCount ,uint id , bool is_active , bool created_consumed_ , uint nft, address ndtAddress );
-    let unused_commercials = await getEvents('commercial', eveeContract, {
+    let unused_commercials = await getEvents('commercial', eveeContract._address, {
       filter: filter, // use prev : x to see all x's replies
       fromBlock: 0,
     toBlock: 'latest',
@@ -116,7 +116,7 @@ export class Commercial extends Component {
     // const { eveeNFTContract } = this.props
     const { eveeNFTContract } = this.context
     console.log(_filter)
-    let events = await getEvents('Transfer', eveeNFTContract, {
+    let events = await getEvents('Transfer', eveeNFTContract._address, {
       filter: _filter, // use prev : x to see all x's replies
       fromBlock: 0,
       toBlock: 'latest',
@@ -137,7 +137,7 @@ export class Commercial extends Component {
   getComs = async (_filter) => {
     // const { recipiantContract } = this.props
     const { recipiantContract } = this.context
-    let events = await getEvents('post_com', recipiantContract, {
+    let events = await getEvents('post_com', recipiantContract._address, {
       filter: _filter, // use prev : x to see all x's replies
       fromBlock: 0,
       toBlock: 'latest',

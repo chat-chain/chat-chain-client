@@ -7,7 +7,7 @@ export default async function getPosts(
 ) {
   // get com post part
   let not_done = true
-  let posts_com = await getEvents('post_com',recipiantContract, {
+  let posts_com = await getEvents('post_com',recipiantContract._address, {
     filter: filter_for_posts, // use prev : x to see all x's replies
     fromBlock: 0,
     toBlock: 'latest',
@@ -15,7 +15,7 @@ export default async function getPosts(
     
 
   // get msg post part
-  let posts_msg = await getEvents('post_msg',recipiantContract, {
+  let posts_msg = await getEvents('post_msg',recipiantContract._address, {
     filter: filter_for_posts, // use prev : x to see all x's replies
     fromBlock: 0,
     toBlock: 'latest',

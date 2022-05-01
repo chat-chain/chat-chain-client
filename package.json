@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "@alch/alchemy-web3": "^1.4.2",
     "@bit/joshk.react-spinners-css.ring": "^1.2.1",
     "@metamask/detect-provider": "^1.2.0",
     "axios": "^0.25.0",
