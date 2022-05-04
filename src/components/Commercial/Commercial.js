@@ -190,6 +190,15 @@ export class Commercial extends Component {
     console.log('Commercials Transfered to me ', transfersToMe)
     let ActiveNFTs = []
     for (let trx of transfersToMe) {
+      //test if TX was already logged
+      let isNFTLoged = false
+      for (let com of ActiveNFTs){
+        if (com['tokenId'] == trx['tokenId']){
+          isNFTLoged = true
+        }
+      }
+      if (isNFTLoged) break
+      //
       let filter2 = { _tokenId: trx['tokenId'] }
       console.log(filter2)
       let history
