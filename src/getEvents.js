@@ -9,9 +9,7 @@ export default async function getEvents(
   filter_for_posts,
 ) {
   // get com post part
-  const { account,
-    web3,
-    contract_of_remote,
+  const {
     eveeContract,
     RcipiantContract,
     EveeNFTContract,} = await init(fromContract_add)
@@ -31,7 +29,7 @@ export default async function getEvents(
         )
         not_done  = false
       }catch(e){
-        if (e.code == -32603){
+        if (e.code == -32603 || e.code == -32005){
           await new Promise((resolve) => setTimeout(resolve, 50));
           not_done = true
           
@@ -54,9 +52,6 @@ export default async function getEvents(
     )
     const networkId = await web3.eth.net.getId()
     //WEX xhane to process.env.E_WALLET_PKEY
-    const account = web3.eth.accounts.privateKeyToAccount(
-      '7bf042c43fc75ec3368bed920ebbd50429712e6342232469eeeebf1a6f0b9288'
-    )
     const RcipiantContract = new web3.eth.Contract(
       Recipiant.abi,
       Recipiant.networks[networkId].address
@@ -71,9 +66,6 @@ export default async function getEvents(
     )
     const contract_of_remote = RcipiantContract._address
     return {
-      account,
-      web3,
-      contract_of_remote,
       eveeContract,
       RcipiantContract,
       EveeNFTContract,
