@@ -57,7 +57,7 @@ export class Bid extends Component {
       'MaxFee',
       MaxFee
     )
-    return minPriceForCom * 1.3
+    return minPriceForCom * 1.1
   }
   handleInputChange = (event) => {
     const target = event.target

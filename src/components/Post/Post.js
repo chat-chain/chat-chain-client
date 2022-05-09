@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback,useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { PostUI } from './PostUI'
 import getPosts from '../../getPosts'
+import getEvents from '../../getEvents'
 import Web3Context from '../../web3Context'
 
 export default function Post(props) {
@@ -17,45 +18,16 @@ export default function Post(props) {
       //   })
       // ).shift()
       // get msg post part
-      const posts_msg = (
-        await recipiantContract.getPastEvents('post_msg', {
-          filter: {
-            id: postId,
-          }, // use prev : x to see all x's replies
-          fromBlock: 0,
-          toBlock: 'latest',
-        })
-      ).shift()
 
-      //get sommercial's uri of each post (its located in EveeNFT)
+      let posts_msg = await getPosts(
+        recipiantContract,
+        eveeNFTContract,
+        {id: postId,}
+      )
+ 
+      console.log('ahaha',posts_msg)
+      posts_msg = posts_msg[0]
 
-      // let uri
-      //normal post
-      //normal post
-      posts_msg.returnValues.urlLink = null
-      if (!posts_msg.returnValues.freePost) {
-        posts_msg.returnValues.uri = null
-      } else {
-        // try to extract metadata from uri, otherwise uri will be the the image
-        try {
-          posts_msg.returnValues.uri = await eveeNFTContract.methods
-            .tokenURI(posts_msg.returnValues.tokenId)
-            .call()
-          try {
-            const obj = await fetch(posts_msg.returnValues.uri)
-            // console.log('obj', obj)
-            const jsoni = await obj.json()
-            posts_msg.returnValues.uri = jsoni.image
-            // console.log('the json', jsoni)
-            posts_msg.returnValues.urlLink = jsoni.external_url
-          } catch (e) {
-            //console.log('something went wrong with meta data extraction', e)
-          }
-        } catch (e) {
-          //console.log('something went wrong with image of commercial', e)
-        }
-        //id 0's defulat commercial
-      }
       return posts_msg
     },
     []
@@ -73,9 +45,9 @@ export default function Post(props) {
 
   const getfatrhers = useCallback(
     async (post, eveeNFTContract, recipiantContract, limit) => {
-      let _id = post.returnValues.prev
+      let _id = post.prev
       let fathers = []
-      if (post.returnValues.id !== '0') {
+      if (post.id !== '0') {
         for (let i = 0; i < limit; i++) {
           let posts = await getPosts(recipiantContract, eveeNFTContract, {
             id: _id,
@@ -97,7 +69,7 @@ export default function Post(props) {
       const posts_msg = await get_main_post(
         postId,
         eveeNFTContract,
-        recipiantContract
+        recipiantContract,
       )
       // get sons
       const sons = await getsons(postId, eveeNFTContract, recipiantContract)
@@ -110,13 +82,20 @@ export default function Post(props) {
         3
       )
       console.log('fathers', postId, '     ', fathers)
-      const { id, prev, body, sender, uri } = posts_msg.returnValues
+      //const { id, prev, body, sender, uri } = posts_msg.returnValues
+      const id = posts_msg.id
+      const prev = posts_msg.prev
+      const body = posts_msg.body
+      const sender = posts_msg.sender
+      const uri = posts_msg.uri
+      const freePost = posts_msg.freePost
       const postToEnter = {
         id,
         prev,
         body,
         sender,
         uri,
+        freePost,
       }
       setPost(postToEnter)
     },

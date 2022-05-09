@@ -3,7 +3,6 @@ export default async function getPosts(
   recipiantContract,
   eveeNFTContract,
   filter_for_posts,
-  web3
 ) {
   // get com post part
   let not_done = true
@@ -11,7 +10,7 @@ export default async function getPosts(
     filter: filter_for_posts, // use prev : x to see all x's replies
     fromBlock: 0,
     toBlock: 'latest',
-  },web3)
+  })
     
 
   // get msg post part
@@ -19,7 +18,7 @@ export default async function getPosts(
     filter: filter_for_posts, // use prev : x to see all x's replies
     fromBlock: 0,
     toBlock: 'latest',
-  },web3)
+  })
 
   //get sommercial's uri of each post (its located in EveeNFT)
   for (const p of posts_com) {
