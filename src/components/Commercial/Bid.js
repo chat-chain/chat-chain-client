@@ -14,16 +14,18 @@ export class Bid extends Component {
     const { web3 } = this.props
     const block = await web3.eth.getBlock('pending')
     const { priorityFee, maxGasPerTX } = await this.getGas()
-    const minPriceForCom = this.getMinPriceForCom(
+    const minPriceForCom = await this.getMinPriceForCom(
       block.baseFeePerGas,
       priorityFee,
       maxGasPerTX
     )
-    const bid = this.getPricePerGas(
+    const bid = parseInt(minPriceForCom *1.1)
+    console.log('min bid = ', minPriceForCom)
+    /*const bid = this.getPricePerGas(
       block.baseFeePerGas,
       priorityFee,
       minPriceForCom
-    )
+    )*/
     this.props.setUserBid(bid)
     this.props.setcomCount(1)
     this.setState({ minPriceForCom, bid })

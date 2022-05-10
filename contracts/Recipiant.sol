@@ -8,7 +8,8 @@ contract Recipiant is Landable(){
   address _domainHashAdd;
   uint postCounter;
 
-
+  event post_com(uint indexed id, address indexed NFTContract , uint indexed tokenId, bool freePost);
+  event post_msg(uint indexed id, uint indexed prev ,string body, address indexed sender, uint timestamp);
 
   constructor(string memory first_post, address domainHashAdd , address firstComContract, uint firstComIndex , address eveeContract){
     whiteListEvee(eveeContract);
@@ -23,11 +24,6 @@ contract Recipiant is Landable(){
     _freeTx = false;
     _sender = address(0);
   }
-  
-  event post_com(uint indexed id, address indexed NFTContract , uint indexed tokenId, bool freePost);
-  event post_msg(uint indexed id, uint indexed prev ,string body, address indexed sender);
-
-
 
   function post(string memory input, uint prev) public {
     require (prev < postCounter || prev == 0, 'commenting on non-existing post');
@@ -35,7 +31,7 @@ contract Recipiant is Landable(){
       _sender = msg.sender;
     }
     emit post_com(postCounter, _NFTContract, _tokenId, _freeTx);
-    emit post_msg(postCounter,prev, input, _sender);
+    emit post_msg(postCounter,prev, input, _sender,block.timestamp);
 
     postCounter ++;
   } 
@@ -46,7 +42,6 @@ contract Recipiant is Landable(){
               abi.encodeWithSignature(string('delEncodeEip712DomainHash(address)'),address(this)));
       require(success, string(abi.encodePacked("Failed to delegatecall encodeEip712DomainHash")));
       return bytes32(hash);
-   
   
   }
   function changedomainHashAdd (address domainHashAdd) public notLandable() onlyOwner(){

@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect, useCallback,useContext } from 'react'
+import React, { useRef, useState, useEffect, useCallback,useContext} from 'react'
+
 import { signData } from '../../signData'
 import styles from './Post.module.css'
 import Web3Context from '../../web3Context'
@@ -84,17 +85,22 @@ export const PostUI = (props) => {
   return (
     <main className={styles.postUI_main_wrapper}>
       <div className={styles.postUI_container}>
-        <div className={styles.inline_block}>
-          <label>From :</label>
-          <span> {post.sender}</span>
-        </div>
+        
+        
         <div className={styles.inline_block}>
           <label>Id =</label> <span>{post.id}</span>
           <label> Prev = </label>
           <span> {post.prev}</span>
         </div>
         <div>
-          <label>msg body:</label>
+          <p>{post.timestamp.toLocaleString()}</p>
+          
+        </div>
+        <div className={styles.account_profile}>
+          <p> {post.sender}</p>
+        </div>
+        
+        <div>
           <p> {post.body}</p>
           {finalImage.length > 0 ? (
             <div className={styles.post_img_wrapper}>
@@ -114,7 +120,6 @@ export const PostUI = (props) => {
               justifyContent: 'center',
             }}
           >
-            <label> Commercial:</label>
             <img
               style={{
                 color: 'red',

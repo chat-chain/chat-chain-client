@@ -54,18 +54,20 @@ export default async function getPosts(
       ({ returnValues }) => returnValues.id === posts_msg[i].returnValues.id
     )
     //console.log('post ', posts_msg[i].returnValues.id, ' com ', comIndex)
-
+    var date = new Date(posts_msg[i].returnValues.timestamp*1000);
+    console.log("Date: "+date.getDate())
     posts[i] = {
       id: posts_msg[i].returnValues.id,
       prev: posts_msg[i].returnValues.prev,
       body: posts_msg[i].returnValues.body,
       sender: posts_msg[i].returnValues.sender,
+      timestamp: date,
       NFTContract: comIndex.returnValues.NFTContract,
       tokenId: comIndex.returnValues.tokenId,
       uri: comIndex.returnValues.uri,
       freePost: comIndex.returnValues.freePost,
-    }
+    }   
   }
-  //console.log('posts ', posts)
+  
   return posts
 }

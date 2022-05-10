@@ -22,6 +22,15 @@
   justify-items: center;
   gap: 1em;
 }
+.account_profile {
+  display: flex;
+  height: 50px;
+  border: 1px solid black;
+  font-size: 7.5px;
+  width:50px;
+  background:lightgrey;
+  word-break:  break-all;
+}
 /* .postUI_container > * {
   border: 1px solid #312d2d;
 } */

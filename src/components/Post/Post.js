@@ -89,6 +89,7 @@ export default function Post(props) {
       const sender = posts_msg.sender
       const uri = posts_msg.uri
       const freePost = posts_msg.freePost
+      const timestamp = posts_msg.timestamp
       const postToEnter = {
         id,
         prev,
@@ -96,6 +97,7 @@ export default function Post(props) {
         sender,
         uri,
         freePost,
+        timestamp,
       }
       setPost(postToEnter)
     },
