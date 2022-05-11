@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^2.0.1",
+    "file-loader": "^6.2.0",
     "react-error-overlay": "^6.0.9"
   }
 }

@@ -1,15 +1,23 @@
-import React, { useRef, useState, useEffect, useCallback,useContext} from 'react'
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from 'react'
 
-import { signData } from '../../signData'
+import { signData } from 'signData'
 import styles from './Post.module.css'
-import Web3Context from '../../web3Context'
+import Web3Context from 'web3Context'
+import PlaySvg from 'assets/play.svg'
 const regex = new RegExp(
   /\b(\S+(?:png|jpe?g|gif|apng|avif|jfif|pjpeg|pjp|svg|webp|bmp|ico|cur|tif|tiff)\S*)\b/gim
 )
 // import { v4 as uuidv4 } from 'uuid'
 export const PostUI = (props) => {
   const { post } = props
-  const {currentProvider, recipiantContract,eveeContract, accounts} = useContext(Web3Context)
+  const { currentProvider, recipiantContract, eveeContract, accounts } =
+    useContext(Web3Context)
   const isInitialMount = useRef(true)
   const [finalImage, setFinalImage] = useState([])
   const [finalImagePreview, setFinalImagePreview] = useState([])
@@ -83,23 +91,39 @@ export const PostUI = (props) => {
   //   await signData(uuid, id, accounts[0], recipiantContract, currentProvider)
   // }
   return (
-    <main className={styles.postUI_main_wrapper}>
+    <main>
       <div className={styles.postUI_container}>
-        
-        
-        <div className={styles.inline_block}>
+        <div>
           <label>Id =</label> <span>{post.id}</span>
           <label> Prev = </label>
           <span> {post.prev}</span>
         </div>
-        <div>
-          <p>{post.timestamp.toLocaleString()}</p>
-          
-        </div>
-        <div className={styles.account_profile}>
-          <p> {post.sender}</p>
-        </div>
-        
+        {post.freePost ? (
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: '#C4C4C4',
+              borderRadius: '15px',
+              padding: '6px',
+              maxWidth: '400px',
+            }}
+          >
+            <img
+              style={{
+                color: 'red',
+                fontWeight: 700,
+                backgroundColor: '#C4C4C4',
+                borderRadius: '15px',
+              }}
+              src={post.uri}
+              alt="commercial"
+            />
+          </div>
+        ) : (
+          <label> no commercial</label>
+        )}
+        <p>{post.timestamp.toLocaleString()}</p>
+        <p className={styles.account_profile}> {post.sender}</p>
         <div>
           <p> {post.body}</p>
           {finalImage.length > 0 ? (
@@ -112,78 +136,34 @@ export const PostUI = (props) => {
             </div>
           ) : null}
         </div>
-        {post.freePost ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              style={{
-                color: 'red',
-                fontWeight: 700,
-                border: '1px solid black',
-              }}
-              src={post.uri}
-              alt="commercial"
-              height="100"
-              width="200"
-            />
-          </div>
-        ) : (
-          <label> no commercial</label>
-        )}
       </div>
-      {/* <button
-          type="button"
-          onClick={(e) => handleOnRespondRandomMsgClick(post.id, e)}
-        >
-          random msg to id:{post.id}
-        </button> */}
-      <div
-        style={{
-          display: 'grid',
-          marginBlock: '1em',
-          gap: '1em',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1em',
-          }}
-        >
-          <textarea
-            className={styles.textArea}
-            ref={inputEl}
-            onChange={onPreview}
-            placeholder="MESSAGE"
-          />
-          <div>
-            <input
-              type="checkbox"
-              id="preview"
-              name="preview"
-              value={preview}
-              onChange={checkboxChange}
-            ></input>
-            <label>Preview</label>
-          </div>
-        </div>
-        <div style={{ display: 'grid' }}>
+      <div className={styles.comment_section}>
+        <textarea
+          className={styles.textArea}
+          ref={inputEl}
+          onChange={onPreview}
+          placeholder="Write a comment..."
+        />
+        <div>
           <button
-            className={styles.classy_class}
+            className={styles.play_elipse}
             type="button"
             onClick={(e) => handleOnRespondClick(post.id, e)}
           >
-            Comment on ID: {post.id}
+            {/* Comment on ID: {post.id} */}
+            <img src={PlaySvg} alt="play" />
           </button>
         </div>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="preview"
+          name="preview"
+          value={preview}
+          onChange={checkboxChange}
+        ></input>
+        <label>Preview</label>
       </div>
       {preview && (
         <div style={{ gridColumn: '1 / span 2' }}>

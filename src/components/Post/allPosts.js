@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { PostUI } from './PostUI'
 import Ring from '@bit/joshk.react-spinners-css.ring'
-import Web3Context from '../../web3Context'
-import getPosts from '../../getPosts'
+import Web3Context from 'web3Context'
+import getPosts from 'getPosts'
 export const AllPosts = () => {
   const [posts, setPosts] = useState([])
   const { recipiantContract, eveeNFTContract } = useContext(Web3Context)
@@ -13,7 +13,7 @@ export const AllPosts = () => {
     })
   }, [recipiantContract, eveeNFTContract])
   return (
-    <>
+    <div style={{ display: 'grid', gap: '1em' }}>
       {posts.length > 0 ? (
         posts.map((post) => <PostUI key={post.id} post={post} />)
       ) : (
@@ -22,8 +22,6 @@ export const AllPosts = () => {
           <Ring color="#be97e8" style={{ justifyItems: 'center' }} />
         </div>
       )}
-    </>
+    </div>
   )
 }
-
-

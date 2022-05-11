@@ -75,8 +75,10 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar />
-        <h2>EVEE Free To Use BlockChain Social Media Example</h2>
-        <div>
+        <h2 style={{ textAlign: 'center' }}>
+          EVEE Free To Use BlockChain Social Media Example
+        </h2>
+        <>
           <Web3Provider
             value={{
               web3,
@@ -89,7 +91,7 @@ class App extends Component {
           >
             <Routing></Routing>
           </Web3Provider>
-        </div>
+        </>
       </div>
     )
   }

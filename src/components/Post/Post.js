@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback,useContext } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { PostUI } from './PostUI'
-import getPosts from '../../getPosts'
-import getEvents from '../../getEvents'
-import Web3Context from '../../web3Context'
+import getPosts from 'getPosts'
+import Web3Context from 'web3Context'
 
 export default function Post(props) {
   const get_main_post = useCallback(
@@ -19,13 +18,11 @@ export default function Post(props) {
       // ).shift()
       // get msg post part
 
-      let posts_msg = await getPosts(
-        recipiantContract,
-        eveeNFTContract,
-        {id: postId,}
-      )
- 
-      console.log('ahaha',posts_msg)
+      let posts_msg = await getPosts(recipiantContract, eveeNFTContract, {
+        id: postId,
+      })
+
+      console.log('ahaha', posts_msg)
       posts_msg = posts_msg[0]
 
       return posts_msg
@@ -69,7 +66,7 @@ export default function Post(props) {
       const posts_msg = await get_main_post(
         postId,
         eveeNFTContract,
-        recipiantContract,
+        recipiantContract
       )
       // get sons
       const sons = await getsons(postId, eveeNFTContract, recipiantContract)
@@ -103,13 +100,16 @@ export default function Post(props) {
     },
     [get_main_post, getfatrhers, getsons]
   )
-const {eveeNFTContract, recipiantContract, currentProvider, accounts}=useContext(Web3Context)
+  const { eveeNFTContract, recipiantContract, currentProvider, accounts } =
+    useContext(Web3Context)
   // const { eveeNFTContract, recipiantContract, currentProvider, accounts } =
   //   props
   const [post, setPost] = useState(null)
   const { postId } = useParams()
   useEffect(() => {
-    getPostsAndRelations(postId, eveeNFTContract, recipiantContract).catch(console.error)
+    getPostsAndRelations(postId, eveeNFTContract, recipiantContract).catch(
+      console.error
+    )
   }, [
     getPostsAndRelations,
     postId,
@@ -123,7 +123,6 @@ const {eveeNFTContract, recipiantContract, currentProvider, accounts}=useContext
     <div
       style={{
         display: 'grid',
-        border: '3px solid yellow',
       }}
     >
       {post && <PostUI post={post} />}
