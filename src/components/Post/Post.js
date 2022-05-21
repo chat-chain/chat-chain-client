@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { PostUI } from './PostUI'
 import getPosts from 'getPosts'
 import Web3Context from 'web3Context'
+import { Sons } from './Sons'
 
 export default function Post(props) {
   const get_main_post = useCallback(
@@ -97,6 +98,7 @@ export default function Post(props) {
         timestamp,
       }
       setPost(postToEnter)
+      setSons(sons)
     },
     [get_main_post, getfatrhers, getsons]
   )
@@ -105,6 +107,7 @@ export default function Post(props) {
   // const { eveeNFTContract, recipiantContract, currentProvider, accounts } =
   //   props
   const [post, setPost] = useState(null)
+  const [sons, setSons] = useState(null)
   const { postId } = useParams()
   useEffect(() => {
     getPostsAndRelations(postId, eveeNFTContract, recipiantContract).catch(
@@ -126,6 +129,14 @@ export default function Post(props) {
       }}
     >
       {post && <PostUI post={post} />}
+      {/* {sons && <Sons sons={sons} />} */}
+      {sons && (
+        <div style={{ display: 'flex', overflowX: 'auto' }}>
+          {sons.map((son) => (
+            <PostUI key={son.id} post={son} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
