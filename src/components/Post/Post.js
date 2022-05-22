@@ -131,9 +131,16 @@ export default function Post(props) {
       {post && <PostUI post={post} />}
       {/* {sons && <Sons sons={sons} />} */}
       {sons && (
-        <div style={{ display: 'flex', overflowX: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            overflowX: 'auto',
+            paddingBlock: '1em',
+            gap: '56px',
+          }}
+        >
           {sons.map((son) => (
-            <PostUI key={son.id} post={son} />
+            <Sons key={son.id} post={son} />
           ))}
         </div>
       )}

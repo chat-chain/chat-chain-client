@@ -24,6 +24,7 @@ img {
   background-color: rgb(235, 235, 235);
   padding: 1.5em;
   justify-items: center;
+  gap: 1em;
 }
 button {
   cursor: pointer;
