@@ -46,7 +46,7 @@ export class Bid extends Component {
     // return 1500000000
   }
   getMinPriceForCom = (baseFee, priorityFee, maxGasPerTX) => {
-    const MaxFee = 2 * baseFee + priorityFee
+    const MaxFee = parseInt(1.5 * baseFee + priorityFee)
     return maxGasPerTX * MaxFee
   }
   getPricePerGas = (baseFee, priorityFee, minPriceForCom) => {
@@ -59,7 +59,7 @@ export class Bid extends Component {
       'MaxFee',
       MaxFee
     )
-    return minPriceForCom * 1.1
+    return minPriceForCom
   }
   handleInputChange = (event) => {
     const target = event.target
