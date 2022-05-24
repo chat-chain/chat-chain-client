@@ -92,7 +92,7 @@ export const PostUI = (props) => {
   // }
   return (
     <main>
-      <div className={styles.postUI_container}>
+      <div className={styles.postUI_container_bigger}>
         <div>
           <label>Id =</label> <span>{post.id}</span>
           <label> Prev = </label>

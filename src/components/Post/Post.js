@@ -36,7 +36,13 @@ export default function Post(props) {
       let sons = await getPosts(recipiantContract, eveeNFTContract, {
         prev: postId,
       })
-      return sons
+      const real_sons = []
+      for (let son of sons){
+        if (son.id!=0){
+          real_sons.push(son)
+        }
+      }
+      return real_sons
     },
     []
   )

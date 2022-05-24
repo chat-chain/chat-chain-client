@@ -14,6 +14,15 @@ main {
   display: grid;
   gap: 1em;
   background-color: white;
+  font-size: 18px;
+  padding: 1em;
+  border-radius: 12px 12px 0px 0px;
+}
+.postUI_container_bigger {
+  display: grid;
+  gap: 1em;
+  background-color: white;
+  font-size: 25px;
   padding: 1em;
   border-radius: 12px 12px 0px 0px;
 }
