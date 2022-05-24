@@ -29,3 +29,13 @@ img {
 button {
   cursor: pointer;
 }
+.navbar button {
+  padding: 0.7em 2.5em;
+  border-radius: 99em;
+  border: 0;
+  transition: background-color 0.45s;
+  background-color: white;
+}
+.navbar button:hover {
+  background-color: rgb(166, 237, 100);
+}

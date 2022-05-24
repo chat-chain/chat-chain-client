@@ -1,6 +1,6 @@
 main {
   max-width: 500px;
-  margin: auto;
+  margin-inline: auto;
 }
 
 .postUI_main_wrapper {
@@ -42,6 +42,9 @@ main {
 }
 .sons {
   border-radius: 12px;
+}
+.sons > * {
+  flex: 1;
 }
 .son_card {
   cursor: pointer;
