@@ -37,7 +37,7 @@ export class Commercial extends Component {
     const { accounts, eveeContract, recipiantContract } = this.context
     const { uri, userBidPerCom, comCount } = this.state
     const contract_of_remote = await recipiantContract._address
-    console.log('BID', parseInt(userBidPerCom))
+    console.log('BID', userBidPerCom)
     await eveeContract.methods
       .acceptComercial(masterProxy, contract_of_remote, uri, comCount)
       .send({

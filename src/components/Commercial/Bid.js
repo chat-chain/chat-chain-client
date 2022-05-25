@@ -80,7 +80,7 @@ export class Bid extends Component {
           <input
             type="range"
             name="userBidPerCom"
-            min={minPriceForCom*0.8}
+            min={parseInt(minPriceForCom*0.8)}
             value={userBidPerCom}
             max={bid * 2}
             onChange={this.props.handleInputChange}
