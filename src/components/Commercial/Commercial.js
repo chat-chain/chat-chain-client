@@ -19,6 +19,8 @@ export class Commercial extends Component {
       comCount: '',
       pendingCom: null,
       activeCom: null,
+      postUri: '',
+      postID: '',
     }
   }
 
@@ -177,6 +179,22 @@ export class Commercial extends Component {
     })
   }
 
+  setURI = async() => {
+    const { accounts, recipiantContract, eveeNFTContract } = this.context
+    const {postID,postUri} = this.state
+    console.log('postID',postID,accounts,'accounts')
+    let post = await getPosts(recipiantContract, eveeNFTContract, {
+      id: postID,
+    })
+    console.log(post)
+    await eveeNFTContract.methods
+      .setTokenUri(parseInt(post[0]['tokenId']),  postUri)
+      .send({
+        from: accounts[0],
+        gasLimit: 6000000,
+      })
+  }
+
   getMyActiveCommercials = async (
     accounts,
     recipiantContract,
@@ -261,6 +279,8 @@ export class Commercial extends Component {
       comCount,
       pendingCom,
       activeCom,
+      postID,
+      postUri,
     } = this.state
     const { web3 } = this.context
     const pendingComsArray = []
@@ -341,6 +361,24 @@ export class Commercial extends Component {
             loading pending & active commercials
           </div>
         )}
+         <div>
+          <label>Change post's URI: </label>
+          <input
+            type="text"
+            name="postUri"
+            value={postUri}
+            placeholder="uri"
+            onChange={this.handleInputChange}
+          />
+          <input
+            type="text"
+            name="postID"
+            value={postID}
+            placeholder="postID"
+            onChange={this.handleInputChange}
+          />
+        </div>
+        <button onClick={this.setURI}>Set URI</button>
       </>
     )
   }

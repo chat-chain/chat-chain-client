@@ -76,7 +76,7 @@ class App extends Component {
       <div className="App">
         <Navbar />
         <h2 style={{ textAlign: 'center' }}>
-          EVEE Free To Use BlockChain Social Media Example
+          Chat-Chain
         </h2>
         <>
           <Web3Provider
