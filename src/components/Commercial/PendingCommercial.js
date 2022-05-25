@@ -14,7 +14,7 @@ export const PendingCommercial = ({ pendingCom }) => {
         </span>
       </div>
       <div>
-        <label>gwei: </label>
+        <label>wei: </label>
         <span>{pendingCom.balance}</span>
       </div>
     </>

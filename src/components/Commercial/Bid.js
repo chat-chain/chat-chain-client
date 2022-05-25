@@ -19,7 +19,7 @@ export class Bid extends Component {
       priorityFee,
       maxGasPerTX
     )
-    const bid = parseInt(minPriceForCom *1.1)
+    const bid = parseInt(minPriceForCom *1.4)
     console.log('min bid = ', minPriceForCom)
     /*const bid = this.getPricePerGas(
       block.baseFeePerGas,
@@ -75,17 +75,14 @@ export class Bid extends Component {
     const { userBidPerCom, comCount } = this.props
     return bid && minPriceForCom && userBidPerCom ? (
       <>
-        <div>choose bid:</div>
-        <p>normal bid: {bid}</p>
-        <p>min bid: {minPriceForCom}</p>
         <div>
-          <p>per Com {userBidPerCom} wei</p>
+          <p>per Com {userBidPerCom/1000000000000000000} eth</p>
           <input
             type="range"
             name="userBidPerCom"
-            min={minPriceForCom}
+            min={minPriceForCom*0.8}
             value={userBidPerCom}
-            max={bid * 1.3}
+            max={bid * 2}
             onChange={this.props.handleInputChange}
             step="1000000"
           />
@@ -99,7 +96,7 @@ export class Bid extends Component {
               value={comCount} 
               />
               </div>
-              <p style={{ color: 'green' }}>Total {userBidPerCom * comCount} Wei</p>
+              <p style={{ color: 'green' }}>Total {userBidPerCom/1000000000000000000 * comCount} eth</p>
         <button type="button" onClick={this.props.onSendCommercial}>
           Send Commercial
         </button>

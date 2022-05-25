@@ -282,7 +282,7 @@ export class Commercial extends Component {
             onChange={this.handleInputChange}
           />
         </div>
-        <button onClick={this.setFlag}>next...</button>
+        <button onClick={this.setFlag}>Get bid</button>
 
         {flag && (
           <Bid
@@ -295,7 +295,6 @@ export class Commercial extends Component {
             onSendCommercial={this.onSendCommercial}
           />
         )}
-        <div>current commercial address :{masterProxy}</div>
         {activeCom && pendingCom ? (
           <div
             style={{

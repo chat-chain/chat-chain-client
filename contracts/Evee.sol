@@ -119,14 +119,14 @@ contract Evee
 
 	}
 
-	function findCommercialArr(address attachFrom ,address attachTo, uint minGas, uint comCount) view public isWhitelisted(attachFrom, msg.sender) returns (uint[] memory){
+	function findCommercialArr(address attachFrom ,address attachTo, uint minGasDevidedBy1000, uint comCount) view public isWhitelisted(attachFrom, msg.sender) returns (uint[] memory){
 		uint id = head[attachFrom][attachTo];
 		uint [] memory arr = new uint[](comCount);
 		uint i = 0;
 		while ((id!=0) && (i < comCount-1)){
 			require (commercialsList[attachFrom][attachTo][id].com.isActive, 'Linked list is broken, inactive commercial in list of commercials');
 			//check if minGas <  amount/comCount
-			if ((commercialsList[attachFrom][attachTo][id].com.attachTo == attachTo)&&(commercialsList[attachFrom][attachTo][id].com.attachFrom == attachFrom)&&(commercialsList[attachFrom][attachTo][id].com.gweiAmount/commercialsList[attachFrom][attachTo][id].com.comCount >= minGas)){
+			if ((commercialsList[attachFrom][attachTo][id].com.attachTo == attachTo)&&(commercialsList[attachFrom][attachTo][id].com.attachFrom == attachFrom)&&(commercialsList[attachFrom][attachTo][id].com.gweiAmount/commercialsList[attachFrom][attachTo][id].com.comCount >= (minGasDevidedBy1000*1000))){
 				for (uint comAmount = 0; comAmount < commercialsList[attachFrom][attachTo][id].com.comCount ; comAmount++)
 				{
 					arr[i]=id;
