@@ -4,6 +4,7 @@ import { PostUI } from './PostUI'
 import getPosts from 'getPosts'
 import Web3Context from 'web3Context'
 import { Sons } from './Sons'
+import Ring from '@bit/joshk.react-spinners-css.ring'
 
 export default function Post(props) {
   const get_main_post = useCallback(
@@ -37,8 +38,8 @@ export default function Post(props) {
         prev: postId,
       })
       const real_sons = []
-      for (let son of sons){
-        if (son.id!=0){
+      for (let son of sons) {
+        if (son.id != 0) {
           real_sons.push(son)
         }
       }
@@ -117,12 +118,15 @@ export default function Post(props) {
   const [post, setPost] = useState(null)
   const [sons, setSons] = useState(null)
   const [fathers, setFathers] = useState(null)
-
+  const [isLoadingPostRelations, setIsLoadingPostRelations] = useState(false)
   const { postId } = useParams()
   useEffect(() => {
-    getPostsAndRelations(postId, eveeNFTContract, recipiantContract).catch(
-      console.error
-    )
+    setIsLoadingPostRelations(true)
+    getPostsAndRelations(postId, eveeNFTContract, recipiantContract)
+      .then(() => {
+        setIsLoadingPostRelations(false)
+      })
+      .catch(console.error)
   }, [
     getPostsAndRelations,
     postId,
@@ -133,35 +137,44 @@ export default function Post(props) {
   ])
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gap: '1.5em',
-      }}
-    >
-      {fathers && (
-        <div>
-          {fathers.map((father) => (
-            <Sons key={father.id} post={father} />
-          ))}
+    <>
+      {isLoadingPostRelations ? (
+        <div style={{ display: 'grid', placeItems: 'center' }}>
+          LOADING POST {postId}
+          <Ring color="#be97e8" style={{ justifyItems: 'center' }} />
         </div>
-      )}
-      {post && <PostUI post={post} />}
-      {/* {sons && <Sons sons={sons} />} */}
-      {sons && (
+      ) : (
         <div
           style={{
-            display: 'flex',
-            overflowX: 'auto',
-            paddingBlock: '1em',
-            gap: '56px',
+            display: 'grid',
+            gap: '1.5em',
           }}
         >
-          {sons.map((son) => (
-            <Sons key={son.id} post={son} />
-          ))}
+          {fathers && (
+            <div>
+              {fathers.map((father) => (
+                <Sons key={father.id} post={father} />
+              ))}
+            </div>
+          )}
+          {post && <PostUI post={post} />}
+          {/* {sons && <Sons sons={sons} />} */}
+          {sons && (
+            <div
+              style={{
+                display: 'flex',
+                overflowX: 'auto',
+                paddingBlock: '1em',
+                gap: '56px',
+              }}
+            >
+              {sons.map((son) => (
+                <Sons key={son.id} post={son} />
+              ))}
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   )
 }
