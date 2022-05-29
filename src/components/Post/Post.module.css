@@ -83,3 +83,7 @@ main {
   border-radius: 0px 0px 9px 9px;
   padding: 17px 34px;
 }
+.body_text {
+  border: 1px gray solid;
+  padding: 6px;
+}

@@ -125,7 +125,7 @@ export const PostUI = (props) => {
         <p>{post.timestamp.toLocaleString()}</p>
         <p className={styles.account_profile}> {post.sender}</p>
         <div>
-          <p> {post.body}</p>
+          <p className={styles.body_text}> {post.body}</p>
           {finalImage.length > 0 ? (
             <div className={styles.post_img_wrapper}>
               {finalImage.map((res, index) => (

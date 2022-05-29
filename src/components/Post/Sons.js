@@ -33,7 +33,7 @@ export const Sons = (props) => {
       <p>{post.timestamp.toLocaleString()}</p>
       <p className={styles.account_profile}> {post.sender}</p>
       <div>
-        <p> {post.body}</p>
+        <p className={styles.body_text}> {post.body}</p>
       </div>
     </main>
   )
