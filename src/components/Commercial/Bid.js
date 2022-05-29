@@ -19,7 +19,7 @@ export class Bid extends Component {
       priorityFee,
       maxGasPerTX
     )
-    const bid = parseInt(minPriceForCom *1.4)
+    const bid = parseInt(minPriceForCom *1.6)
     console.log('min bid = ', minPriceForCom)
     /*const bid = this.getPricePerGas(
       block.baseFeePerGas,
@@ -82,7 +82,7 @@ export class Bid extends Component {
             name="userBidPerCom"
             min={parseInt(minPriceForCom*0.8)}
             value={userBidPerCom}
-            max={bid * 2}
+            max={minPriceForCom * 5}
             onChange={this.props.handleInputChange}
             step="1000000"
           />
